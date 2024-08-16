@@ -104,3 +104,45 @@ class TestBooksCollector:
 
     def test_get_books_with_specific_genre_book_without_genre_empty_list(self, create_book_genre):
         assert create_book_genre.get_books_with_specific_genre('') == []
+
+    def test_get_books_for_children_book_genre_consist_two_books_not_for_children_and_book_without_genre_empty_list(self, create_book_genre):
+        assert create_book_genre.get_books_for_children() == []
+
+    def test_get_books_for_children_book_genre_consist_one_book_for_children_list_with_one_name(self, create_book_genre):
+        create_book_genre.add_new_book('Курочка ряба')
+        create_book_genre.set_book_genre('Курочка ряба', 'Мультфильмы')
+        assert create_book_genre.get_books_for_children() == ['Курочка ряба']
+
+    def test_get_list_of_favorites_books_list_consist_two_books_return_this_list(self):
+        collector = BooksCollector()
+        collector.favorites = ['Книга 1', 'Книга 2']
+        assert collector.get_list_of_favorites_books() == ['Книга 1', 'Книга 2']
+
+    def test_add_book_in_favorites_add_two_different_books_two_books_in_list_favorites(self, create_book_genre):
+        create_book_genre.add_book_in_favorites('Война и мир')
+        create_book_genre.add_book_in_favorites('Тихий Дон')
+        assert create_book_genre.get_list_of_favorites_books() == ['Война и мир', 'Тихий Дон']
+
+    def test_add_book_in_favorites_add_non_existing_book_list_of_favorites_not_consist_this_name(self, create_book_genre):
+        create_book_genre.add_book_in_favorites('Война и мир')
+        create_book_genre.add_book_in_favorites('Тихий Дон')
+        create_book_genre.add_book_in_favorites('Возвращение джедая')
+        assert create_book_genre.get_list_of_favorites_books() == ['Война и мир', 'Тихий Дон']
+
+    def test_add_book_in_favorites_add_already_added_book_list_of_favorites_consist_this_book_in_one_copy(self, create_book_genre):
+        create_book_genre.add_book_in_favorites('Война и мир')
+        create_book_genre.add_book_in_favorites('Тихий Дон')
+        create_book_genre.add_book_in_favorites('Тихий Дон')
+        assert create_book_genre.get_list_of_favorites_books() == ['Война и мир', 'Тихий Дон']
+
+    def test_delete_book_from_favorites_delete_one_book_in_the_list_of_two_books_one_book_in_the_list(self, create_book_genre):
+        create_book_genre.add_book_in_favorites('Война и мир')
+        create_book_genre.add_book_in_favorites('Тихий Дон')
+        create_book_genre.delete_book_from_favorites('Тихий Дон')
+        assert create_book_genre.get_list_of_favorites_books() == ['Война и мир']
+
+    def test_delete_book_from_favorites_delete_non_existing_book_in_the_list_of_two_books_two_books_in_the_list(self, create_book_genre):
+        create_book_genre.add_book_in_favorites('Война и мир')
+        create_book_genre.add_book_in_favorites('Тихий Дон')
+        create_book_genre.delete_book_from_favorites('Возвращения джедая')
+        assert create_book_genre.get_list_of_favorites_books() == ['Война и мир', 'Тихий Дон']
